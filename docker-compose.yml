@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: awsdemo-postgres
+    environment:
+      POSTGRES_DB: awsdemo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - awsdemo-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d awsdemo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  localstack:
+    image: localstack/localstack:3.7
+    container_name: awsdemo-localstack
+    environment:
+      - SERVICES=s3,sqs
+      - DEBUG=0
+    ports:
+      - "4566:4566"   # LocalStack edge port - S3 and SQS both go through this
+    volumes:
+      - awsdemo-localstack-data:/var/lib/localstack
+      - ./localstack-init:/etc/localstack/init/ready.d
+
+volumes:
+  awsdemo-postgres-data:
+  awsdemo-localstack-data:
