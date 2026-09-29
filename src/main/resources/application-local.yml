@@ -1,0 +1,13 @@
+# Activate with: SPRING_PROFILES_ACTIVE=local  (or -Dspring-boot.run.profiles=local)
+# Points S3 and SQS at the LocalStack container from docker-compose.yml.
+spring:
+  cloud:
+    aws:
+      credentials:
+        access-key: test
+        secret-key: test
+      s3:
+        endpoint: http://localhost:4566
+        path-style-access-enabled: true
+      sqs:
+        endpoint: http://localhost:4566
